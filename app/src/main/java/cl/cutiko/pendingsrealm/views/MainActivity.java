@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -53,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setRealm() {
         realm = Realm.getDefaultInstance();
-        realmPendings = realm.where(Pending.class).findAll();
+        realmPendings = realm.where(Pending.class).equalTo("done", false).findAll();
+        Log.d("SIZE", "There are " + realmPendings.size() + " out of " + realm.where(Pending.class).findAll().size() + " pendings done");
         RealmChangeListener<RealmResults<Pending>> realmChangeListener = new RealmChangeListener<RealmResults<Pending>>() {
             @Override
             public void onChange(RealmResults<Pending> element) {

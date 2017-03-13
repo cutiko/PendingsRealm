@@ -12,6 +12,7 @@ import android.widget.TextView;
 import cl.cutiko.pendingsrealm.R;
 import cl.cutiko.pendingsrealm.models.Pending;
 import io.realm.OrderedRealmCollection;
+import io.realm.Realm;
 import io.realm.RealmRecyclerViewAdapter;
 
 /**
@@ -40,9 +41,12 @@ public class PendingsAdapter extends RealmRecyclerViewAdapter<Pending, PendingsA
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     int auxPosition = holder.getAdapterPosition();
+                    Realm realm = Realm.getDefaultInstance();
+                    realm.beginTransaction();
                     Pending auxPending = getData().get(auxPosition);
                     auxPending.setDone(true);
-                    getData().remove(auxPosition);
+                    realm.commitTransaction();
+                    realm.close();
                 }
             }
         });
