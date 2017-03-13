@@ -53,6 +53,7 @@ public class CreatePendingDialogFragment extends DialogFragment {
                 pending.setName(editText.getText().toString());
                 pending.setDone(false);
                 new CreatePending().execute(pending);
+                dismiss();
             }
         });
     }
