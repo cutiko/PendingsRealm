@@ -6,17 +6,23 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import cl.cutiko.pendingsrealm.R;
+import cl.cutiko.pendingsrealm.adapters.PendingsAdapter;
 import cl.cutiko.pendingsrealm.models.Pending;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Realm realm;
+    private RealmResults<Pending> realmPendings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +47,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setPendingListener();
+        setRealm();
 
     }
 
-    private void setPendingListener() {
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<Pending> pendings = realm.where(Pending.class).findAll();
-        pendings.addChangeListener(new RealmChangeListener<RealmResults<Pending>>() {
+    private void setRealm() {
+        realm = Realm.getDefaultInstance();
+        realmPendings = realm.where(Pending.class).findAll();
+        RealmChangeListener<RealmResults<Pending>> realmChangeListener = new RealmChangeListener<RealmResults<Pending>>() {
             @Override
             public void onChange(RealmResults<Pending> element) {
-                Pending pending = element.get(element.size()-1);
-                Log.d("PENDING", pending.getName());
+                Toast.makeText(MainActivity.this, element.last().getName(), Toast.LENGTH_SHORT).show();
             }
-        });
+        };
+        realmPendings.addChangeListener(realmChangeListener);
+        PendingsAdapter pendingsAdapter = new PendingsAdapter(realmPendings);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.pendingsRv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(pendingsAdapter);
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        realm.close();
+        realmPendings.removeAllChangeListeners();
+    }
 }
