@@ -17,6 +17,12 @@ public class Pending extends RealmObject {
     public Pending() {
     }
 
+    public Pending(long id, String name, boolean done) {
+        this.id = id;
+        this.name = name;
+        this.done = done;
+    }
+
     public long getId() {
         return id;
     }

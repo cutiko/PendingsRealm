@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import cl.cutiko.pendingsrealm.CreatePending;
 import cl.cutiko.pendingsrealm.R;
 import cl.cutiko.pendingsrealm.models.Pending;
 
@@ -52,7 +51,7 @@ public class CreatePendingDialogFragment extends DialogFragment {
                 Pending pending = new Pending();
                 pending.setName(editText.getText().toString());
                 pending.setDone(false);
-                new CreatePending().execute(pending);
+                //new CreatePending().execute(pending);
                 dismiss();
             }
         });
