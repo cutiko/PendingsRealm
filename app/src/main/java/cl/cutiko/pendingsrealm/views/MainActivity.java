@@ -6,8 +6,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-import cl.cutiko.pendingsrealm.CreatePending;
 import cl.cutiko.pendingsrealm.R;
+import cl.cutiko.pendingsrealm.background.CreatePending;
+import cl.cutiko.pendingsrealm.background.ReadPendings;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         //setRealm();
 
-        new BulkCreation().execute();
+        //new BulkCreation().execute();
+        new BulkRead().execute();
     }
 
     private void setRealm() {
@@ -74,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
             Log.d("BULK_INSER", s);
+        }
+    }
+
+    private class BulkRead extends ReadPendings {
+        @Override
+        protected void onPostExecute(String s) {
+            Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
+            Log.d("BULK_READ", s);
         }
     }
 }
